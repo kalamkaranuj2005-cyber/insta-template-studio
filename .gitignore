@@ -1,0 +1,23 @@
+node_modules/
+dist/
+.env
+.env.local
+
+# user-generated media
+backend/uploads/*
+!backend/uploads/.gitkeep
+backend/exports/*
+!backend/exports/.gitkeep
+
+# logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+*.log
+
+# editor
+.vscode/
+.idea/
+.claude/
+.DS_Store
+Thumbs.db

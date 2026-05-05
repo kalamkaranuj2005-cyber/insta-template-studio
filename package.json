@@ -1,0 +1,15 @@
+{
+  "name": "insta-template-studio",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Full-stack Canva-style editor that turns public Instagram posts into editable templates.",
+  "scripts": {
+    "install:all": "npm install && npm --prefix backend install && npm --prefix frontend install",
+    "dev": "concurrently -n backend,frontend -c blue,magenta \"npm --prefix backend run dev\" \"npm --prefix frontend run dev\"",
+    "build": "npm --prefix frontend run build",
+    "start": "npm --prefix backend start"
+  },
+  "devDependencies": {
+    "concurrently": "^9.0.1"
+  }
+}
