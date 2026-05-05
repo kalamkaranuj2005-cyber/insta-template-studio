@@ -42,17 +42,29 @@ router.post('/video', express.json({ limit: '20mb' }), async (req, res, next) =>
         ? watermark
         : null;
 
-    const { filename } = await renderVideo({
-      sourcePath,
-      overlayPath,
-      options: { width, height, durationSec, watermark: wmText },
-    });
+    let rendered;
+    try {
+      rendered = await renderVideo({
+        sourcePath,
+        overlayPath,
+        options: { width, height, durationSec, watermark: wmText },
+      });
+    } catch (renderErr) {
+      if (overlayPath) fs.unlink(overlayPath, () => {});
+      const msg = renderErr && renderErr.message ? renderErr.message : 'FFmpeg render failed';
+      return res.status(500).json({
+        error: `Video render failed: ${msg}`,
+        hint:
+          'On Render free tier, uploaded files are wiped on container restart. ' +
+          'Try re-uploading the video and exporting again in the same session.',
+      });
+    }
 
     if (overlayPath) fs.unlink(overlayPath, () => {});
 
     res.json({
-      filename,
-      publicUrl: `/static/exports/${filename}`,
+      filename: rendered.filename,
+      publicUrl: `/static/exports/${rendered.filename}`,
       watermark: !!wmText,
     });
   } catch (err) {

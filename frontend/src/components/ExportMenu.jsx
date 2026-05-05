@@ -48,7 +48,10 @@ export default function ExportMenu({ onClose }) {
       });
       setResult(result);
     } catch (e) {
-      setError(e.response?.data?.error || e.message || 'Video export failed.');
+      const apiErr = e.response?.data;
+      const msg = apiErr?.error || e.message || 'Video export failed.';
+      const hint = apiErr?.hint ? `\n${apiErr.hint}` : '';
+      setError(msg + hint);
     } finally {
       setBusy(false);
     }
@@ -82,7 +85,11 @@ export default function ExportMenu({ onClose }) {
         </div>
 
         {busy && <div className="note" style={{ marginTop: 12 }}>Rendering…</div>}
-        {error && <div className="error" style={{ marginTop: 12 }}>{error}</div>}
+        {error && (
+          <div className="error" style={{ marginTop: 12, whiteSpace: 'pre-line' }}>
+            {error}
+          </div>
+        )}
         {result && (
           <div className="note" style={{ marginTop: 12 }}>
             Done. <a href={result.publicUrl} target="_blank" rel="noreferrer">Download MP4</a>
