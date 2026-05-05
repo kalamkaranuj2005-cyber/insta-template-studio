@@ -21,7 +21,16 @@ for (const dir of [uploadDir, exportDir]) {
   if (!fs.existsSync(dir)) fs.mkdirSync(dir, { recursive: true });
 }
 
-app.use(cors());
+const corsOrigin = process.env.CORS_ORIGIN || '*';
+app.use(
+  cors({
+    origin:
+      corsOrigin === '*'
+        ? true
+        : corsOrigin.split(',').map((s) => s.trim()).filter(Boolean),
+    credentials: false,
+  })
+);
 app.use(express.json({ limit: '10mb' }));
 app.use(express.urlencoded({ extended: true }));
 app.use(morgan('dev'));
